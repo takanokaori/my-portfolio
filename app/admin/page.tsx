@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 type Work = {
   title: string;
@@ -13,7 +14,13 @@ type Work = {
 
 export default function AdminPage() {
   const [works, setWorks] = useState<Work[]>([]);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    title: string;
+    period: string;
+    description: string;
+    url: string;
+    imageFile: File | null;
+  }>({
     title: '',
     period: '',
     description: '',
@@ -160,11 +167,13 @@ export default function AdminPage() {
                   </a>
                 )}
                 {work.image && (
-                  <img
+                  <Image
                     src={work.image}
                     alt={work.title}
-                    className="mt-2 max-h-48 rounded border"
-                  />
+                    width={250}
+                    height={250}
+                    className="w-full h-full object-contain max-w-[250px] max-h-[250px]"
+                    />
                 )}
               </li>
             ))}

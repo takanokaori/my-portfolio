@@ -26,7 +26,7 @@ export default async function WorksPage() {
                   alt={work.title}
                   width={250}
                   height={250}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain max-w-[250px] max-h-[250px]"
                 />
               </div>
             )}
