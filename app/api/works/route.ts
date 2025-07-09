@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(works);
   } catch (err) {
     console.error('[API] /api/works error:', err);
-    // return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 
 }

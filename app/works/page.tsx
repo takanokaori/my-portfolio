@@ -5,8 +5,8 @@ import WorksClient from './WorksClient';
 
 export default async function WorksPage() {
   const initialWorks = await prisma.work.findMany({
-    orderBy: { order: 'asc' }, // idではなく order
-    take: 5,
+    orderBy: { order: 'asc' },
+    take: 10,
   });
 
   return <WorksClient initialWorks={initialWorks} />;

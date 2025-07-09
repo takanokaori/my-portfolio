@@ -1,7 +1,8 @@
 // src/app/works/WorksClient.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+// import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { IconBoxMultiple } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,12 +20,19 @@ type Work = {
 
 export default function WorksClient({ initialWorks }: { initialWorks: Work[] }) {
 
+  /*
   const [works, setWorks] = useState<Work[]>(initialWorks);
   const [offset, setOffset] = useState(initialWorks.length);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  */
+  const [works] = useState<Work[]>(initialWorks);
+  const [hasMore] = useState(true);
+  const [loading] = useState(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
+  /*
   const fetchMore = async () => {
     if (loading || !hasMore) return;
     setLoading(true);
@@ -47,8 +55,10 @@ export default function WorksClient({ initialWorks }: { initialWorks: Work[] }) 
     setOffset((prev) => prev + newWorks.length);
     setLoading(false);
   };
+  */
 
   // Intersection Observer
+  /*
   useEffect(() => {
     const target = loaderRef.current;
     if (!target) return; // loaderRefがnullならで弾く
@@ -68,6 +78,7 @@ export default function WorksClient({ initialWorks }: { initialWorks: Work[] }) 
       observer.disconnect();
     };
   }, [works.length, hasMore, fetchMore]);
+  */
 
   return (
     <main className="max-w-4xl mx-auto p-8">
