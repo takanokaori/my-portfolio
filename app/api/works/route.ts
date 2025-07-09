@@ -3,7 +3,7 @@
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
 
@@ -50,29 +50,51 @@ export async function POST(req: Request) {
 
 }
 
-export async function GET(req:Request) {
+export async function GET(req: NextRequest) {
 
-  const { searchParams } = new URL(req.url);
-  const offset = searchParams.get('offset');
-  const limit = searchParams.get('limit');
-  let works;
-  /*
-  const works = await prisma.work.findMany({
-    skip: offset,
-    take: limit,
-    orderBy: { createdAt: 'desc' },
-  });
-  */
-  if (offset !== null && limit !== null) { // limitあり取得
-    works = await prisma.work.findMany({
-      skip: parseInt(offset),
-      take: parseInt(limit),
-      orderBy: { order: 'asc' }
+  try {
+    const { searchParams } = new URL(req.url);
+    const offsetStr = searchParams.get('offset');
+    const limitStr = searchParams.get('limit');
+
+    const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
+    const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+
+    if (
+      (offsetStr && (typeof offset !== 'number' || isNaN(offset))) ||
+      (limitStr && (typeof limit !== 'number' || isNaN(limit)))
+    ) {
+      return NextResponse.json({ error: 'Invalid offset or limit' }, { status: 400 });
+    }
+
+    const works = await prisma.work.findMany({
+      ...(typeof offset === 'number' ? { skip: offset } : {}),
+      ...(typeof limit === 'number' ? { take: limit } : {}),
+      orderBy: { order: 'asc' },
     });
-  } else { // 全件取得
-    works = await prisma.work.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+
+    /*
+    const { searchParams } = new URL(req.url);
+    const offset = searchParams.get('offset');
+    const limit = searchParams.get('limit');
+    let works;
+    if (offset !== null && limit !== null) { // limitあり取得
+      works = await prisma.work.findMany({
+        skip: parseInt(offset),
+        take: parseInt(limit),
+        orderBy: { order: 'asc' }
+      });
+    } else { // 全件取得
+      works = await prisma.work.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+    */
+  
+    return NextResponse.json(works);
+  } catch (err) {
+    console.error('API /api/works error:', err);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
-  return NextResponse.json(works);
+
 }
