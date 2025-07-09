@@ -7,7 +7,7 @@ import { IconLayoutList, IconBrandGithub } from '@tabler/icons-react';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="flex min-h-screen items-center justify-center">
       <div className='grid grid-cols-1'>
         <div className='flex items-center justifi-center gap-5'>
           <div className='w-[200px] y-[200px]'>
@@ -25,6 +25,12 @@ export default function Home() {
               このポートフォリオはNext.jsとTailwindCSSで制作しました。
             </p>
           </div>
+        </div>
+        <div className='border-t-1 mt-6'>
+          <p className='p-4 pl-0'>asdf</p>
+        </div>
+        <div className='border-t-1 mt-6'>
+          <p className='p-4 pl-0'>asdf</p>
         </div>
         <div className='border-t-1 mt-6'>
           <p className='p-4 pl-0'>asdf</p>

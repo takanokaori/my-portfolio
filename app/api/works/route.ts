@@ -2,8 +2,8 @@
 
 import { writeFile } from 'fs/promises';
 import path from 'path';
-import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
 
@@ -51,6 +51,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req:Request) {
+
   const { searchParams } = new URL(req.url);
   const offset = searchParams.get('offset');
   const limit = searchParams.get('limit');
@@ -66,7 +67,7 @@ export async function GET(req:Request) {
     works = await prisma.work.findMany({
       skip: parseInt(offset),
       take: parseInt(limit),
-      orderBy: { createdAt: 'desc' }
+      orderBy: { order: 'asc' }
     });
   } else { // 全件取得
     works = await prisma.work.findMany({

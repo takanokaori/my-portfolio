@@ -23,4 +23,5 @@ model Work {
   url         String?
   image       String?
   createdAt   DateTime @default(now())
+  order       Int      @default(0)
 }
