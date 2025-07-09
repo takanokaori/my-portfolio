@@ -2,8 +2,8 @@
 
 import { writeFile } from 'fs/promises';
 import path from 'path';
-import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
 
@@ -57,8 +57,8 @@ export async function GET(req: NextRequest) {
     const offsetStr = searchParams.get('offset');
     const limitStr = searchParams.get('limit');
 
-    const offset = offsetStr ? parseInt(offsetStr, 10) : undefined;
-    const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+    const offset = offsetStr ? Number(offsetStr) : undefined;
+    const limit = limitStr ? Number(limitStr) : undefined;
 
     if (
       (offsetStr && (typeof offset !== 'number' || isNaN(offset))) ||
@@ -68,8 +68,8 @@ export async function GET(req: NextRequest) {
     }
 
     const works = await prisma.work.findMany({
-      ...(typeof offset === 'number' ? { skip: offset } : {}),
-      ...(typeof limit === 'number' ? { take: limit } : {}),
+      ...(typeof offset !== undefined ? { skip: offset } : {}),
+      ...(typeof limit !== undefined ? { take: limit } : {}),
       orderBy: { order: 'asc' },
     });
 
