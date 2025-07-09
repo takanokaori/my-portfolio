@@ -3,8 +3,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
-  const workId = Number(context.params.id);
+export async function DELETE(request: NextRequest) {
+  const url = new URL(request.url);
+  const idStr = url.pathname.split('/').pop();
+  const workId = Number(idStr);
 
   if (isNaN(workId)) {
     return NextResponse.json(

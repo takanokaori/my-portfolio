@@ -30,7 +30,10 @@ type Work = {
   order: number;
 };
 
-function SortableItem({ work }: { work: Work }) {
+function SortableItem({ work, setWorks }: {
+  work: Work;
+  setWorks: React.Dispatch<React.SetStateAction<Work[]>>;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: work.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -262,7 +265,7 @@ export default function AdminPage() {
             <SortableContext items={works.map((w) => w.id)} strategy={verticalListSortingStrategy}>
               <ul className="space-y-2">
                 {works.map((work) => (
-                  <SortableItem key={work.id} work={work} />
+                  <SortableItem key={work.id} work={work} setWorks={setWorks} />
                 ))}
               </ul>
             </SortableContext>
