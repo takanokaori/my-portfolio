@@ -1,6 +1,6 @@
 // src/app/api/works/[id]/route.ts
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
