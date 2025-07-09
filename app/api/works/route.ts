@@ -68,8 +68,8 @@ export async function GET(req: NextRequest) {
     }
 
     const works = await prisma.work.findMany({
-      ...(typeof offset !== undefined ? { skip: offset } : {}),
-      ...(typeof limit !== undefined ? { take: limit } : {}),
+      ...(offset !== undefined ? { skip: offset } : {}),
+      ...(limit !== undefined ? { take: limit } : {}),
       orderBy: { order: 'asc' },
     });
 
