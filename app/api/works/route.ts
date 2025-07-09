@@ -80,11 +80,13 @@ export async function GET(req: NextRequest) {
       console.log('[API] 全件取得');
     }
 
+    console.log('[API] prisma.work.findMany 実行前');
     const works = await prisma.work.findMany({
       ...(offset !== undefined ? { skip: offset } : {}),
       ...(limit !== undefined ? { take: limit } : {}),
       orderBy: { order: 'asc' },
     });
+    console.log('[API] 取得結果:', works);
 
     /*
     let works;
