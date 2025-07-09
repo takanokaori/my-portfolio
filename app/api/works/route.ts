@@ -57,39 +57,36 @@ export async function GET(req: NextRequest) {
     const offsetStr = searchParams.get('offset');
     const limitStr = searchParams.get('limit');
 
-    const offset = offsetStr ? Number(offsetStr) : undefined;
-    const limit = limitStr ? Number(limitStr) : undefined;
+    const offset = offsetStr !== null ? Number(offsetStr) : undefined;
+    const limit = limitStr !== null ? Number(limitStr) : undefined;
 
     if (
-      (offsetStr && (typeof offset !== 'number' || isNaN(offset))) ||
-      (limitStr && (typeof limit !== 'number' || isNaN(limit)))
+      (offset !== undefined && isNaN(offset)) ||
+      (limit !== undefined && isNaN(limit))
     ) {
       return NextResponse.json({ error: 'Invalid offset or limit' }, { status: 400 });
     }
 
+    /*
     const works = await prisma.work.findMany({
       ...(offset !== undefined ? { skip: offset } : {}),
       ...(limit !== undefined ? { take: limit } : {}),
       orderBy: { order: 'asc' },
     });
+    */
 
-    /*
-    const { searchParams } = new URL(req.url);
-    const offset = searchParams.get('offset');
-    const limit = searchParams.get('limit');
     let works;
-    if (offset !== null && limit !== null) { // limitあり取得
+    if (offset !== undefined && limit !== undefined) {
       works = await prisma.work.findMany({
-        skip: parseInt(offset),
-        take: parseInt(limit),
-        orderBy: { order: 'asc' }
+        skip: offset,
+        take: limit,
+        orderBy: { order: 'asc' },
       });
-    } else { // 全件取得
+    } else {
       works = await prisma.work.findMany({
-        orderBy: { createdAt: 'desc' },
+        orderBy: { order: 'asc' },
       });
     }
-    */
   
     return NextResponse.json(works);
   } catch (err) {
