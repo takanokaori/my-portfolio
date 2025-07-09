@@ -50,9 +50,28 @@ export async function POST(req: Request) {
 
 }
 
-export async function GET() {
+export async function GET(req:Request) {
+  const { searchParams } = new URL(req.url);
+  const offset = searchParams.get('offset');
+  const limit = searchParams.get('limit');
+  let works;
+  /*
   const works = await prisma.work.findMany({
+    skip: offset,
+    take: limit,
     orderBy: { createdAt: 'desc' },
   });
+  */
+  if (offset !== null && limit !== null) { // limitあり取得
+    works = await prisma.work.findMany({
+      skip: parseInt(offset),
+      take: parseInt(limit),
+      orderBy: { createdAt: 'desc' }
+    });
+  } else { // 全件取得
+    works = await prisma.work.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
   return NextResponse.json(works);
 }

@@ -1,10 +1,11 @@
+// src/app/admin/page.tsx
 'use client';
 
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 type Work = {
+  id: number;
   title: string;
   period: string;
   description: string;
@@ -33,10 +34,8 @@ export default function AdminPage() {
     const fetchWorks = async () => {
       try {
         const res = await fetch('/api/works');
-        if (res.ok) {
-          const data = await res.json();
-          setWorks(data);
-        }
+        const data = await res.json();
+        setWorks(data);
       } catch (err) {
         console.error('取得に失敗しました', err);
       } finally {
@@ -173,8 +172,27 @@ export default function AdminPage() {
                     width={250}
                     height={250}
                     className="w-full h-full object-contain max-w-[250px] max-h-[250px]"
+                    priority={false}
                     />
                 )}
+                <div className='text-right'>
+                  <button
+                    onClick={ async () => {
+                      if (confirm('本当に削除しますか？')) {
+                        const res = await fetch(`/api/works/${work.id}`, { method: 'DELETE' });
+                        if (res.ok) {
+                          setWorks((prev) => prev.filter((w) => w.id !== work.id));
+                        } else {
+                          const result = await res.json();
+                          alert('削除に失敗しました: ' + result.error);
+                        }
+                      }
+                    }}
+                    className='py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
+                  >
+                    削除
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

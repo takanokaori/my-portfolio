@@ -1,13 +1,83 @@
 // src/app/works/page.tsx
+'use client';
 
-import { prisma } from '@/lib/prisma';
+import { useEffect, useRef, useState } from 'react';
+// import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
 import Link from 'next/link';
+import { IconBoxMultiple } from '@tabler/icons-react';
 
-export default async function WorksPage() {
+type Work = {
+  id: number;
+  title: string;
+  period?: string;
+  description: string;
+  url?: string;
+  image?: string;
+};
+
+export default function WorksPage() {
+
+  const [works, setWorks] = useState<Work[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  /*
   const works = await prisma.work.findMany({
     orderBy: { createdAt: 'desc'},
   });
+  */
+  
+  const fetchWorks = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+
+    const res = await fetch(`/api/works?offset=${offset}&limit=5`);
+    const newWorks: Work[] = await res.json();
+    // 人工的な遅延を追加（1秒）
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    if (newWorks.length === 0) {
+      setHasMore(false);
+    } else {
+      setWorks((prev) => [...prev, ...newWorks]);
+      setOffset((prev) => prev + newWorks.length);
+    }
+    setLoading(false);
+  };
+
+  // Intersection Observer
+  useEffect(() => {
+
+    const target = loaderRef.current;
+    if (!target) return; // loaderRefがnullならで弾く
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchWorks();
+        }
+      },
+      { 
+        // threshold: 1,
+        rootMargin: '100px' // 画面下部から100px手前で発火
+      }
+    );
+
+    observer.observe(target);
+    /*
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    } else {
+      console.log('IntersectionObserver: loaderRef.current is none');
+    }
+    */
+
+    return () => {
+      observer.unobserve(target);
+      observer.disconnect();
+    };
+  }, [works.length]);
 
   return (
     <main className="max-w-4xl mx-auto p-8">
@@ -26,7 +96,8 @@ export default async function WorksPage() {
                   alt={work.title}
                   width={250}
                   height={250}
-                  className="w-full h-full object-contain max-w-[250px] max-h-[250px]"
+                  className="w-full h-full object-contain"
+                  priority={false}
                 />
               </div>
             )}
@@ -38,21 +109,34 @@ export default async function WorksPage() {
                   <p className="text-sm text-gray-500 mb-1">期間：{work.period}</p>
                 )}
                 <p className="text-gray-700 mb-2">{work.description}</p>
+                {work.url && (
+                  <Link
+                    href={work.url}
+                    className="flex hover:underline mt-2 self-start text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <IconBoxMultiple className="w-4 h-5 mr-1" /> {work.url}
+                  </Link>
+                )}
               </div>
-              {work.url && (
-                <Link
-                  href={work.url}
-                  className="text-blue-600 underline mt-2 self-start"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  サイトを見る
-                </Link>
-              )}
             </div>
           </div>
         ))}
       </div>
+      
+      {hasMore && (
+        <div ref={loaderRef} className="text-center py-6 text-gray-500">
+          {loading ? (
+            <div className="flex justify-center">
+              <div className="animate-ping h-4 w-4 bg-gray-400 rounded-full"></div>
+            </div>
+          ) : (
+            <p>　</p>
+          )}
+        </div>
+      )}
+
     </main>
   );
 }
