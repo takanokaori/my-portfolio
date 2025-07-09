@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev-turbo": "next dev --turbopack",
     "build": "prisma generate && prisma migrate deploy && next build",
+    "prisma-gen": "prisma generate",
     "migrate-dev": "prisma migrate dev",
     "migrate-deploy": "prisma migrate deploy",
     "start": "next start",
