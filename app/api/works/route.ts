@@ -53,17 +53,23 @@ export async function POST(req: Request) {
 export async function GET(req: NextRequest) {
 
   try {
+    console.log('[API] /api/works 呼び出し');
     const { searchParams } = new URL(req.url);
     const offsetStr = searchParams.get('offset');
     const limitStr = searchParams.get('limit');
+    console.log('[API] offsetStr:', offsetStr);
+    console.log('[API] limitStr:', limitStr);
 
     const offset = offsetStr !== null ? Number(offsetStr) : undefined;
     const limit = limitStr !== null ? Number(limitStr) : undefined;
+    console.log('[API] offset:', offset);
+    console.log('[API] limit:', limit);
 
     if (
       (offset !== undefined && isNaN(offset)) ||
       (limit !== undefined && isNaN(limit))
     ) {
+      console.error('[API] 無効なoffsetまたはlimit');
       return NextResponse.json({ error: 'Invalid offset or limit' }, { status: 400 });
     }
 
@@ -77,20 +83,23 @@ export async function GET(req: NextRequest) {
 
     let works;
     if (offset !== undefined && limit !== undefined) {
+      console.log('[API] offset/limitありで取得');
       works = await prisma.work.findMany({
         skip: offset,
         take: limit,
         orderBy: { order: 'asc' },
       });
     } else {
+      console.log('[API] 全件取得');
       works = await prisma.work.findMany({
         orderBy: { order: 'asc' },
       });
     }
   
+    console.log('[API] 取得件数:', works.length);
     return NextResponse.json(works);
   } catch (err) {
-    console.error('API /api/works error:', err);
+    console.error('[API] /api/works error:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 

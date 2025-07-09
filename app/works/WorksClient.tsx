@@ -31,15 +31,20 @@ export default function WorksClient({ initialWorks }: { initialWorks: Work[] }) 
 
     const res = await fetch(`/api/works?offset=${offset}&limit=5`);
     const newWorks = await res.json();
+    if (!Array.isArray(newWorks)) {
+      console.error('取得結果が配列ではありません', newWorks);
+      return;
+    }
     // 人工的な遅延を追加（.5秒）
     await new Promise(resolve => setTimeout(resolve, 500));
 
     if (newWorks.length === 0) {
       setHasMore(false);
-    } else {
-      setWorks((prev) => [...prev, ...newWorks]);
-      setOffset((prev) => prev + newWorks.length);
+      return;
     }
+    
+    setWorks((prev) => [...prev, ...newWorks]);
+    setOffset((prev) => prev + newWorks.length);
     setLoading(false);
   };
 
