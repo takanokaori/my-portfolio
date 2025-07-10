@@ -15,7 +15,7 @@ export default function EnvBanner() {
     // return null;
     return (
       <div className="w-full text-[0] invisible">
-        { envTxt }
+        これはPreview以外の環境です
       </div>
     );
   }
