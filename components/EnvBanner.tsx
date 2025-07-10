@@ -1,9 +1,23 @@
 // /components/EnvBanner.tsx
-// VercelのPreview環境なら「これはPreview環境です」と表示する
+// 環境表示バッジ
 
 export default function EnvBanner() {
+  if (!process.env.VERCEL_ENV) {
+    return (
+      <div className="w-full bg-green-500/20 text-black text-center py-2 text-sm">
+        これはLocal環境です
+      </div>
+    );
+  }
+
   if (process.env.VERCEL_ENV !== 'preview') {
-    return null;
+    const envTxt = String(process.env.VERCEL_ENV);
+    // return null;
+    return (
+      <div className="w-full text-[0] invisible">
+        { envTxt }
+      </div>
+    );
   }
 
   return (
