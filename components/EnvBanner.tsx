@@ -12,12 +12,7 @@ export default function EnvBanner() {
   }
 
   if (env !== 'preview') {
-    // return null;
-    return (
-      <div className="w-full text-[0] invisible">
-        {env} 
-      </div>
-    );
+    return null;
   }
 
   return (
