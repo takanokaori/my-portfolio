@@ -2,7 +2,8 @@
 // 環境表示バッジ
 
 export default function EnvBanner() {
-  if (!process.env.VERCEL_ENV) {
+  const env = process.env.NEXT_PUBLIC_VERCEL_ENV;
+  if (!env) {
     return (
       <div className="w-full bg-green-500/20 text-black text-center py-2 text-sm">
         これはLocal環境です
@@ -10,12 +11,11 @@ export default function EnvBanner() {
     );
   }
 
-  if (process.env.VERCEL_ENV !== 'preview') {
-    const envTxt = String(process.env.VERCEL_ENV);
+  if (env !== 'preview') {
     // return null;
     return (
       <div className="w-full text-[0] invisible">
-        これはPreview以外の環境です
+        {env} 
       </div>
     );
   }
