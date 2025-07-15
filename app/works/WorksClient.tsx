@@ -89,18 +89,35 @@ export default function WorksClient({ initialWorks }: { initialWorks: Work[] }) 
           <div key={work.id} className="fade-in flex flex-col md:flex-row-reverse bg-white shadow rounded-lg overflow-hidden">
             {work.image && (
               <div className="flex align-bottom">
-                <Image
-                  src={work.image}
-                  alt={work.title}
-                  width={300}
-                  height={150}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                  }}
-                  className='min-w-[300px] object-cover object-top'
-                  priority={false}
-                />
+                {work.url ? (
+                  <Link href={work.url} target="_blank" rel="noopener noreferrer" className='hover:brightness-80 duration-200 ease-in'>
+                    <Image
+                      src={work.image}
+                      alt={work.title}
+                      width={300}
+                      height={150}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                      }}
+                      className='min-w-[300px] object-cover object-top'
+                      priority={false}
+                    />
+                  </Link>
+                ) : (
+                  <Image
+                    src={work.image}
+                    alt={work.title}
+                    width={300}
+                    height={150}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                    }}
+                    className='min-w-[300px] object-cover object-top'
+                    priority={false}
+                  />
+                )}
               </div>
             )}
             <div className="p-4 flex-1 flex flex-col justify-between">
